@@ -3171,7 +3171,8 @@ function salvarTreino(){
   });
 dados.treinoPersonalizado={exerciciosA,exerciciosB,series,reps,descanso,atualizadoEm:hoje()};
   salvarDados();showToast('Treino salvo! 💪');
-  mostrarMuscScreen('musc-inicio', true);renderMusculacaoInicio();
+  muscHistorico=[];
+  mostrarMuscScreen('musc-inicio');renderMusculacaoInicio();
 }
   
 function abrirExecucao(letra){
