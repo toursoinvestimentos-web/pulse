@@ -1444,7 +1444,7 @@ Sequência Pulse
         <div class="stat-item"><div class="stat-val" id="done-ser">—</div><div class="stat-label">séries</div></div>
       </div>
       <button class="btn" style="margin-bottom:12px" onclick="finalizarMusculacao()">✅ Registrar treino</button>
-      <button class="btn btn-ghost" onclick="fecharMusculacao()">← Voltar</button>
+      <button class="btn btn-ghost" onclick="voltarMusculacao()">← Voltar</button>
     </div>
   </div>
 </div>
@@ -2984,7 +2984,7 @@ function atualizarCabecalhoMusc(id){
     'musc-consentimento': {titulo:'AVISO', sub:'Leia antes de continuar'},
     'musc-montagem': {titulo:'MONTAR TREINO', sub:'Escolha os exercícios'},
     'musc-metas':    {titulo:'SÉRIES & REPS', sub:'Defina a intensidade'},
-    'musc-ex':       {titulo:'TREINO '+curTreino, sub:'Execute os exercícios'},
+   'musc-ex':       {titulo:'TREINO '+(curTreino||''), sub:'Execute os exercícios'},
     'musc-done':     {titulo:'CONCLUÍDO!', sub:'Treino finalizado'},
   };
   const info=titulos[id]||{titulo:'MUSCULAÇÃO',sub:''};
