@@ -2952,6 +2952,11 @@ function voltarInicio(){
 }
 
 function voltarMusculacao(){
+  const telaAtiva=document.querySelector('.musc-screen.ativo');
+  if(!telaAtiva || telaAtiva.id==='musc-inicio'){
+    fecharMusculacao();
+    return;
+  }
   if(muscHistorico.length===0){
     fecharMusculacao();
     return;
