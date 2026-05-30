@@ -3169,9 +3169,9 @@ function salvarTreino(){
       if(alocado==='B')exerciciosB.push({n:ex.n,g:grupo,gif:ex.gif});
     });
   });
-  dados.treinoPersonalizado={exerciciosA,exerciciosB,series,reps,descanso,atualizadoEm:hoje()};
+dados.treinoPersonalizado={exerciciosA,exerciciosB,series,reps,descanso,atualizadoEm:hoje()};
   salvarDados();showToast('Treino salvo! 💪');
-  mostrarMuscScreen('musc-inicio');renderMusculacaoInicio();
+  mostrarMuscScreen('musc-inicio', true);renderMusculacaoInicio();
 }
   
 function abrirExecucao(letra){
