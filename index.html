@@ -1267,7 +1267,7 @@ Sequência Pulse
 <!-- ══════════ SCREEN: MUSCULAÇÃO v1.6 ══════════ -->
 <div id="screen-musculacao" class="screen-musculacao">
   <div class="musc-header">
-    <button class="musc-back" onclick="fecharMusculacao()">←</button>
+  <button class="musc-back" onclick="voltarMusculacao()">←</button>
     <div class="musc-title-wrap">
       <div class="musc-title" id="musc-header-title">MUSCULAÇÃO</div>
       <div class="musc-sub" id="musc-header-sub">Organize seus exercícios</div>
@@ -1325,7 +1325,7 @@ Sequência Pulse
  <div id="musc-montagem" class="musc-screen">
     <div style="font-size:0.9em;color:var(--cinza);margin-bottom:18px;line-height:1.7;padding:14px 16px;background:var(--card);border-radius:12px;border-left:3px solid var(--azul)">Escolha os exercícios e defina se vão para o <span style="color:var(--azul);font-weight:700">Treino A</span> ou <span style="color:var(--verde);font-weight:700">Treino B</span>.</div>
     <div id="montagem-lista"></div>
-    <button class="btn" onclick="avancarMontagem()">Próximo → Definir séries e repetições</button>
+    <button class="btn" onclick="avancarMontagem()">Próximo → Definir Séries e Repetições</button>
     <div style="font-size:0.68em;color:var(--cinza);text-align:center;margin-top:6px">Escolha o que quiser — sem obrigação de marcar todos</div>
   </div>
 
@@ -1822,6 +1822,7 @@ let subAbaAtiva = 'treinos';
 let subTreinoAtiva = 'a';
 let chartPeso=null,chartCal=null,chartSono=null,chartAgua=null,chartTreinos=null;
 let curTreino='A',curExIdx=0,seriesDone=[],timerInterval=null;
+let muscHistorico=[];
 let blinkECGTimeout = null;
 let jaPiscouNaTela = false;
 
@@ -2931,7 +2932,7 @@ let montagemAtual={};
 function abrirMusculacao(){
   document.getElementById('screen-musculacao').classList.add('ativo');
   renderMusculacaoInicio();
-  mostrarMuscScreen('musc-inicio');
+  mostrarMuscScreen('musc-inicio', true);
 }
   function abrirGif(nome,url){
   document.getElementById('gif-modal-nome').textContent=nome;
@@ -2946,13 +2947,46 @@ function fecharMusculacao(){
   document.getElementById('screen-musculacao').classList.remove('ativo');
 }
 function voltarInicio(){
-  mostrarMuscScreen('musc-inicio');
+  mostrarMuscScreen('musc-inicio', true);
   renderMusculacaoInicio();
 }
-function mostrarMuscScreen(id){
+
+function voltarMusculacao(){
+  if(muscHistorico.length===0){
+    fecharMusculacao();
+    return;
+  }
+  const anterior=muscHistorico.pop();
+  document.querySelectorAll('.musc-screen').forEach(s=>s.classList.remove('ativo'));
+  document.getElementById(anterior).classList.add('ativo');
+  window.scrollTo(0,0);
+  atualizarCabecalhoMusc(anterior);
+  if(anterior==='musc-inicio') renderMusculacaoInicio();
+}
+function mostrarMuscScreen(id, limparHistorico){
+  if(limparHistorico) muscHistorico=[];
+  const telaAtiva=document.querySelector('.musc-screen.ativo');
+  if(telaAtiva && telaAtiva.id !== id) muscHistorico.push(telaAtiva.id);
   document.querySelectorAll('.musc-screen').forEach(s=>s.classList.remove('ativo'));
   document.getElementById(id).classList.add('ativo');
   window.scrollTo(0,0);
+  atualizarCabecalhoMusc(id);
+}
+
+function atualizarCabecalhoMusc(id){
+  const titulos={
+    'musc-inicio':   {titulo:'MUSCULAÇÃO', sub: dados.treinoPersonalizado && (dados.treinoPersonalizado.exerciciosA.length||dados.treinoPersonalizado.exerciciosB.length) ? 'Escolha seu treino de hoje' : 'Monte seu primeiro treino'},
+    'musc-consentimento': {titulo:'AVISO', sub:'Leia antes de continuar'},
+    'musc-montagem': {titulo:'MONTAR TREINO', sub:'Escolha os exercícios'},
+    'musc-metas':    {titulo:'SÉRIES & REPS', sub:'Defina a intensidade'},
+    'musc-ex':       {titulo:'TREINO '+curTreino, sub:'Execute os exercícios'},
+    'musc-done':     {titulo:'CONCLUÍDO!', sub:'Treino finalizado'},
+  };
+  const info=titulos[id]||{titulo:'MUSCULAÇÃO',sub:''};
+  const el=document.getElementById('musc-header-title');
+  const sub=document.getElementById('musc-header-sub');
+  if(el) el.textContent=info.titulo;
+  if(sub) sub.textContent=info.sub;
 }
 function renderMusculacaoInicio(){
   const treino=dados.treinoPersonalizado;
