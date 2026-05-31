@@ -3026,7 +3026,15 @@ function iniciarExecucaoPersonalizada(letra){
   if(!lista||!lista.length){showToast('Nenhum exercício no Treino '+letra);return;}
   TREINOS[letra]=lista.map(ex=>({n:ex.n,g:ex.g,gif:ex.gif,s:treino.series,r:treino.reps}));
   if(!dados.pesosExerciciosInicial)dados.pesosExerciciosInicial={};
-  curTreino=letra;curExIdx=0;loadEx();
+  curTreino=letra;
+  const s=JSON.parse(sessionStorage.getItem('muscAtivo')||'null');
+  if(s&&s.treino===letra&&typeof s.exIdx==='number'&&s.exIdx<TREINOS[letra].length){
+    curExIdx=s.exIdx;
+    if(Array.isArray(s.seriesDone))seriesDone=[...s.seriesDone];
+  }else{
+    curExIdx=0;seriesDone=[];
+  }
+  loadEx();
   mostrarMuscScreen('musc-ex');
 }
 function iniciarMontagem(atualizar){
