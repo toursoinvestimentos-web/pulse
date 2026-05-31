@@ -3457,7 +3457,7 @@ function showToast(msg,dur=2800){
         if(lista&&lista.length){
           TREINOS[letra]=lista.map(ex=>({n:ex.n,g:ex.g,gif:ex.gif,s:treino.series,r:treino.reps}));
           curTreino=letra;
-          curExIdx=Math.min(s.exIdx||0,TREINOS[letra].length-1);
+          curExIdx=typeof s.exIdx==='number'?Math.min(s.exIdx,TREINOS[letra].length-1):0;
           document.getElementById('screen-musculacao').classList.add('ativo');
           loadEx();
           mostrarMuscScreen('musc-ex');
