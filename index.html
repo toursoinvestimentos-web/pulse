@@ -2945,6 +2945,7 @@ function fecharGifModal(){
 }
 function fecharMusculacao(){
   document.getElementById('screen-musculacao').classList.remove('ativo');
+  sessionStorage.removeItem('muscAtivo');
 }
 function voltarInicio(){
   mostrarMuscScreen('musc-inicio', true);
