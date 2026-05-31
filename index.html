@@ -3026,15 +3026,7 @@ function iniciarExecucaoPersonalizada(letra){
   if(!lista||!lista.length){showToast('Nenhum exercício no Treino '+letra);return;}
   TREINOS[letra]=lista.map(ex=>({n:ex.n,g:ex.g,gif:ex.gif,s:treino.series,r:treino.reps}));
   if(!dados.pesosExerciciosInicial)dados.pesosExerciciosInicial={};
-  const s=JSON.parse(sessionStorage.getItem('muscAtivo')||'null');
-  if(s&&s.treino===letra&&typeof s.exIdx==='number'&&s.exIdx<TREINOS[letra].length){
-    curTreino=letra;curExIdx=s.exIdx;
-    if(Array.isArray(s.seriesDone))seriesDone=[...s.seriesDone];
-  }else{
-    curTreino=letra;curExIdx=0;seriesDone=[];
-    sessionStorage.setItem('muscAtivo',JSON.stringify({treino:letra,exIdx:0,seriesDone:[]}));
-  }
-  loadEx();
+  curTreino=letra;curExIdx=0;loadEx();
   mostrarMuscScreen('musc-ex');
 }
 function iniciarMontagem(atualizar){
