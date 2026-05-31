@@ -753,7 +753,8 @@ body{
   
 </style>
 </head>
-<body>
+<body style="visibility:hidden">
+  
 <!-- ═══ LOGO PULSE — define uma vez, usa em todo lugar ═══ -->
 <svg style="display:none" xmlns="http://www.w3.org/2000/svg">
 <symbol id="logo-pulse" viewBox="0 0 4700 1400" preserveAspectRatio="xMidYMid meet">
@@ -3025,7 +3026,26 @@ function iniciarExecucaoPersonalizada(letra){
   if(!lista||!lista.length){showToast('Nenhum exercício no Treino '+letra);return;}
   TREINOS[letra]=lista.map(ex=>({n:ex.n,g:ex.g,gif:ex.gif,s:treino.series,r:treino.reps}));
   if(!dados.pesosExerciciosInicial)dados.pesosExerciciosInicial={};
-  curTreino=letra;curExIdx=0;loadEx();
+  // Lê sessionStorage para retomar de onde parou (mesmo sem reload)
+  const sessaoSalva=sessionStorage.getItem('muscAtivo');
+  if(sessaoSalva){
+    try{
+      const s=JSON.parse(sessaoSalva);
+      if(s.treino===letra&&typeof s.exIdx==='number'&&s.exIdx<TREINOS[letra].length){
+        curTreino=letra;
+        curExIdx=s.exIdx;
+        if(Array.isArray(s.seriesDone))seriesDone=[...s.seriesDone];
+        loadEx();
+        mostrarMuscScreen('musc-ex');
+        showToast('Retomando do exercício '+(curExIdx+1)+'...');
+        return;
+      }
+    }catch(e){}
+  }
+  // Nenhum estado salvo: começa do zero
+  curTreino=letra;curExIdx=0;seriesDone=[];
+  sessionStorage.setItem('muscAtivo',JSON.stringify({treino:letra,exIdx:0,seriesDone:[]}));
+  loadEx();
   mostrarMuscScreen('musc-ex');
 }
 function iniciarMontagem(atualizar){
@@ -3474,8 +3494,9 @@ function showToast(msg,dur=2800){
     const el=document.getElementById('sub-'+s);
     if(el)el.style.display=s==='treinos'?'block':'none';
   });
- renderHoje();
+renderHoje();
   mesAtual=new Date();
+  document.body.style.visibility='visible';
   const s=document.getElementById('splash');
 if(s){
   // Usa sessionStorage: a splash aparece em cada nova sessão (app aberto do zero)
